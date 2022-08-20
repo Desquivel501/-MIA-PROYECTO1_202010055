@@ -60,7 +60,6 @@ string Analizador::replace_txt(string str, const string& from, const string& to)
     return str;
 }
 
-
 void Analizador::analizar(string entrada){
     // transform(entrada.begin(),entrada.end(),entrada.begin(), ::tolower);
     vector<string> cmd_list = split_txt(entrada);
@@ -77,12 +76,16 @@ void Analizador::analizar(string entrada){
 
     identificar(comando, parametros);
 }
+
 void Analizador::identificar(string comando, vector<string> parametros){
     string param = "";
 
     if(comando == "mkdisk"){
         cout<<"Comando -> mkdisk"<<endl;
 
+        int size = -1;
+        string fit, unit, path;
+
         for(int i = 0; i < parametros.size(); i++){
             param = parametros.at(i);;
 
@@ -90,30 +93,41 @@ void Analizador::identificar(string comando, vector<string> parametros){
                 param = replace_txt(param, "-s->", "");
                 param = replace_txt(param, "\"", "");
                 cout<<"Size: "<<param<<endl;
+                size =  stoi(param);
             }
 
             if(param.find("-f->") == 0){
                 param = replace_txt(param, "-f->", "");
                 param = replace_txt(param, "\"", "");
                 cout<<"Fit: "<<param<<endl;
+                fit = param;
             }
 
             if(param.find("-u->") == 0){
                 param = replace_txt(param, "-u->", "");
                 param = replace_txt(param, "\"", "");
                 cout<<"Unidad: "<<param<<endl;
+                unit = param;
             }
 
             if(param.find("-path->") == 0){
                 param = replace_txt(param, "-path->", "");
                 param = replace_txt(param, "\"", "");
                 cout<<"Ruta: "<<param<<endl;
+                path = param;
             }
         }
+        cmd.crearDisco(size,unit,fit,path);
     }
 
     if(comando == "fdisk"){
         cout<<"Comando -> "<<comando<<endl;
+
+        int size = 0;
+        string fit, unit, path, type, name ;
+        bool del, add;
+
+
         for(int i = 0; i < parametros.size(); i++){
             param = parametros.at(i);;
 
@@ -121,51 +135,60 @@ void Analizador::identificar(string comando, vector<string> parametros){
                 param = replace_txt(param, "-s->", "");
                 param = replace_txt(param, "\"", "");
                 cout<<"Size: "<<param<<endl;
+                size = stoi(param);
             }
 
             if(param.find("-u->") == 0){
                 param = replace_txt(param, "-u->", "");
                 param = replace_txt(param, "\"", "");
                 cout<<"Unidad: "<<param<<endl;
+                unit = param;
             }
 
             if(param.find("-path->") == 0){
                 param = replace_txt(param, "-path->", "");
                 param = replace_txt(param, "\"", "");
                 cout<<"Ruta: "<<param<<endl;
+                path = param;
             }
 
             if(param.find("-t->") == 0){
                 param = replace_txt(param, "-t->", "");
                 param = replace_txt(param, "\"", "");
                 cout<<"Particion: "<<param<<endl;
+                type = param;
             }
 
             if(param.find("-f->") == 0){
                 param = replace_txt(param, "-f->", "");
                 param = replace_txt(param, "\"", "");
                 cout<<"Fit: "<<param<<endl;
+                fit = param;
             }
 
             if(param.find("-delete->") == 0){
                 param = replace_txt(param, "-delete->", "");
                 param = replace_txt(param, "\"", "");
                 cout<<"Delete: "<<param<<endl;
+                del = true;
             }
 
             if(param.find("-name->") == 0){
                 param = replace_txt(param, "-name->", "");
                 param = replace_txt(param, "\"", "");
                 cout<<"Nombre: "<<param<<endl;
+                name = param;
             }
 
             if(param.find("-add->") == 0){
                 param = replace_txt(param, "-add->", "");
                 param = replace_txt(param, "\"", "");
                 cout<<"Añadir: "<<param<<endl;
+                add = true;
             }
-
         }
+
+        cmd.crearParticion(size,unit,fit,path,type,name);
 
     }
 

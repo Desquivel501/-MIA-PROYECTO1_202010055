@@ -11,14 +11,15 @@
 #include <time.h>
 #include <cstdlib>
 #include <fstream>
+#include "comandos.cpp"
 
 using namespace std;
 
 class Analizador{
     private:
-        
-
+        Comandos cmd;
     public:
+    
         vector<string> split_txt(string entrada);
         string replace_txt(string str, const string& from, const string& to);
         void analizar(string entrada);
