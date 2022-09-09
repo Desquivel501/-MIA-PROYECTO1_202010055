@@ -1,5 +1,6 @@
 #include "analizador.h"
 
+
 vector<string> Analizador::split_txt(string text){
     
     string segment;
@@ -60,6 +61,22 @@ string Analizador::replace_txt(string str, const string& from, const string& to)
     return str;
 }
 
+
+void Analizador::analizar_comandos(string path){
+    ifstream file;
+    file.open(path);
+    string line;
+
+    while(std::getline(file, line))
+    {
+        if(line.length() > 0){
+            if(line.at(0) != '#') {
+                analizar(line);
+            }
+        }
+    }
+}
+
 void Analizador::analizar(string entrada){
     // transform(entrada.begin(),entrada.end(),entrada.begin(), ::tolower);
     vector<string> cmd_list = split_txt(entrada);
@@ -73,15 +90,32 @@ void Analizador::analizar(string entrada){
             parametros.push_back(cmd_list.at(i));
         }
     }
-
     identificar(comando, parametros);
 }
 
 void Analizador::identificar(string comando, vector<string> parametros){
     string param = "";
 
+    if(comando == "exec"){
+        int size = 0;
+        string path;
+
+        for(int i = 0; i < parametros.size(); i++){
+            param = parametros.at(i);;
+
+            if(param.find("-path->") == 0){
+                param = replace_txt(param, "-path->", "");
+                param = replace_txt(param, "\"", "");
+                cout<<"Ruta: "<<param<<endl;
+                path = param;
+            }
+
+        }
+        analizar_comandos(path);
+    }
+
     if(comando == "mkdisk"){
-        cout<<"Comando -> mkdisk"<<endl;
+        // cout<<"Comando -> mkdisk"<<endl;
 
         int size = -1;
         string fit, unit, path;
@@ -92,28 +126,28 @@ void Analizador::identificar(string comando, vector<string> parametros){
             if(param.find("-s->") == 0){
                 param = replace_txt(param, "-s->", "");
                 param = replace_txt(param, "\"", "");
-                cout<<"Size: "<<param<<endl;
+                // cout<<"Size: "<<param<<endl;
                 size =  stoi(param);
             }
 
             if(param.find("-f->") == 0){
                 param = replace_txt(param, "-f->", "");
                 param = replace_txt(param, "\"", "");
-                cout<<"Fit: "<<param<<endl;
+                // cout<<"Fit: "<<param<<endl;
                 fit = param;
             }
 
             if(param.find("-u->") == 0){
                 param = replace_txt(param, "-u->", "");
                 param = replace_txt(param, "\"", "");
-                cout<<"Unidad: "<<param<<endl;
+                // cout<<"Unidad: "<<param<<endl;
                 unit = param;
             }
 
             if(param.find("-path->") == 0){
                 param = replace_txt(param, "-path->", "");
                 param = replace_txt(param, "\"", "");
-                cout<<"Ruta: "<<param<<endl;
+                // cout<<"Ruta: "<<param<<endl;
                 path = param;
             }
         }
@@ -121,11 +155,11 @@ void Analizador::identificar(string comando, vector<string> parametros){
     }
 
     if(comando == "fdisk"){
-        cout<<"Comando -> "<<comando<<endl;
+        // cout<<"Comando -> "<<comando<<endl;
 
         int size = 0;
         string fit, unit, path, type, name ;
-        bool del, add;
+        bool del = false, add = false;
 
 
         for(int i = 0; i < parametros.size(); i++){
@@ -134,66 +168,80 @@ void Analizador::identificar(string comando, vector<string> parametros){
             if(param.find("-s->") == 0){
                 param = replace_txt(param, "-s->", "");
                 param = replace_txt(param, "\"", "");
-                cout<<"Size: "<<param<<endl;
                 size = stoi(param);
             }
 
             if(param.find("-u->") == 0){
                 param = replace_txt(param, "-u->", "");
                 param = replace_txt(param, "\"", "");
-                cout<<"Unidad: "<<param<<endl;
                 unit = param;
             }
 
             if(param.find("-path->") == 0){
                 param = replace_txt(param, "-path->", "");
                 param = replace_txt(param, "\"", "");
-                cout<<"Ruta: "<<param<<endl;
                 path = param;
             }
 
             if(param.find("-t->") == 0){
                 param = replace_txt(param, "-t->", "");
                 param = replace_txt(param, "\"", "");
-                cout<<"Particion: "<<param<<endl;
                 type = param;
             }
 
             if(param.find("-f->") == 0){
                 param = replace_txt(param, "-f->", "");
                 param = replace_txt(param, "\"", "");
-                cout<<"Fit: "<<param<<endl;
-                fit = param;
+                fit = param.at(0);
             }
 
             if(param.find("-delete->") == 0){
                 param = replace_txt(param, "-delete->", "");
                 param = replace_txt(param, "\"", "");
-                cout<<"Delete: "<<param<<endl;
                 del = true;
             }
 
             if(param.find("-name->") == 0){
                 param = replace_txt(param, "-name->", "");
                 param = replace_txt(param, "\"", "");
-                cout<<"Nombre: "<<param<<endl;
                 name = param;
             }
 
             if(param.find("-add->") == 0){
                 param = replace_txt(param, "-add->", "");
                 param = replace_txt(param, "\"", "");
-                cout<<"Añadir: "<<param<<endl;
                 add = true;
             }
         }
 
-        cmd.crearParticion(size,unit,fit,path,type,name);
+        if (!del && !add){
+            cmd.crearParticion(size,unit,fit,path,type,name);
+        }
+
+        else if (del && !add){
+            cout<<"[MIA]@Proyecto1:~$ Delete"<<endl;
+        }
+
+        else if (!del && add){
+            cout<<"[MIA]@Proyecto1:~$ Add"<<endl;
+
+        }else{
+            cout<<"[MIA]@Proyecto1:~$ FDISK no puede tener comandos 'add' y 'delete'"<<endl;
+        }
+
+
+
+
+
+
+        
 
     }
 
     if(comando == "rmdisk"){
-        cout<<"Comando -> "<<comando<<endl;
+        // cout<<"Comando -> "<<comando<<endl;
+
+        string path;
 
         for(int i = 0; i < parametros.size(); i++){
             param = parametros.at(i);;
@@ -201,13 +249,17 @@ void Analizador::identificar(string comando, vector<string> parametros){
             if(param.find("-path->") == 0){
                 param = replace_txt(param, "-path->", "");
                 param = replace_txt(param, "\"", "");
-                cout<<"Ruta: "<<param<<endl;
+                // cout<<"Ruta: "<<param<<endl;
+                path = param;
             }
         }
+        cmd.borrarDisco(path);
     }
 
     if(comando == "mount"){
-        cout<<"Comando -> "<<comando<<endl;
+        string path;
+        string part;
+        string nombre_d;
 
         for(int i = 0; i < parametros.size(); i++){
             param = parametros.at(i);;
@@ -215,19 +267,26 @@ void Analizador::identificar(string comando, vector<string> parametros){
             if(param.find("-path->") == 0){
                 param = replace_txt(param, "-path->", "");
                 param = replace_txt(param, "\"", "");
-                cout<<"Ruta: "<<param<<endl;
+                path = param;
             }
 
             if(param.find("-name->") == 0){
                 param = replace_txt(param, "-name->", "");
                 param = replace_txt(param, "\"", "");
-                cout<<"Nombre: "<<param<<endl;
+                part = param;
             }
         }
+        int index = path.find_last_of('/');
+        nombre_d = path.substr(index + 1);
+
+        int index_p = nombre_d.find_last_of('.');
+        nombre_d = nombre_d.substr(0, index_p);
+
+        cmd.mount(path, part, nombre_d);
     }
 
     if(comando == "unmount"){
-        cout<<"Comando -> "<<comando<<endl;
+        string id;
 
         for(int i = 0; i < parametros.size(); i++){
             param = parametros.at(i);;
@@ -235,9 +294,42 @@ void Analizador::identificar(string comando, vector<string> parametros){
             if(param.find("-id->") == 0){
                 param = replace_txt(param, "-id->", "");
                 param = replace_txt(param, "\"", "");
-                cout<<"id: "<<param<<endl;
+                id = param;
             }
         }
+        cmd.unmount(id);
+    }
+
+    if(comando == "rep"){
+        string path, id, name;
+
+        for(int i = 0; i < parametros.size(); i++){
+            param = parametros.at(i);;
+
+            if(param.find("-id->") == 0){
+                param = replace_txt(param, "-id->", "");
+                param = replace_txt(param, "\"", "");
+                id = param;
+            }
+
+            if(param.find("-name->") == 0){
+                param = replace_txt(param, "-name->", "");
+                param = replace_txt(param, "\"", "");
+                name = param;
+            }
+
+            if(param.find("-path->") == 0){
+                param = replace_txt(param, "-path->", "");
+                param = replace_txt(param, "\"", "");
+                path = param;
+            }
+        }
+
+        if(name == "mbr"){
+            cmd.reporteMBR(path, id);
+        }
+
+
     }
 
     if(comando == "mkfs"){
@@ -598,7 +690,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
     }
 
-        if(comando == "pause"){
+    if(comando == "pause"){
         cout<<"Comando -> "<<comando<<endl;
         cin.ignore();
     }

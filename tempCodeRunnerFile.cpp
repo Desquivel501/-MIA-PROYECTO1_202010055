@@ -1,1 +1,1 @@
-fdisk -s->500 -path->/home/desquivel/Disco1.dsk -name->Particion2 
+exec -path->/home/desquivel/Desktop/script.mia

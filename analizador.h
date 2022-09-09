@@ -24,6 +24,7 @@ class Analizador{
         string replace_txt(string str, const string& from, const string& to);
         void analizar(string entrada);
         void identificar(string comando, vector<string> parametros);
+        void analizar_comandos(string path);
 };
 
 
