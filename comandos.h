@@ -58,6 +58,7 @@ private:
     struct used_space{
             int start;
             int size;
+            partition part;
             bool operator < (const used_space& rhs) const {
                 return start < rhs.start;
             }
@@ -94,6 +95,8 @@ public:
     void crearParticion(int size, string unit, string fit, string path, string tipo, string name);
     void crearParticionLogica(string path, mbr master, int size, char fit, string name);
 
+    void borrarParticion(string path, string name);
+
     bool existeExtendida(mbr master);
     bool nombreRepetido(FILE file, mbr master, char nombre[]);
 
@@ -116,26 +119,35 @@ public:
             i++;
         }
         if(index == -1) {
-            cout<<"[MIA]@Proyecto1:~$ No se ha montado la particion"<<endl;
+            cout<<"[MIA]@Proyecto1:~$ La particion no ha sido montada"<<endl;
             return;
         }
         mounted.erase(mounted.begin() + index);
+        cout<<"[MIA]@Proyecto1:~$ Se ha desmontado la particion: " <<id<<endl;
     }
 
     void repDisco(string id, string path);
+    string repDiscoEx(string path, mbr master, int size_total);
+
+
     void repMBR(string id, string path);
 
-    void repDisco(string path, string id);
-
     void getMount(){
+        cout<<"Particiones Montadas:" <<endl;
         for (montado m : mounted){
             cout<<"-- ID: "<<m.id<<endl;
         }
     }
 
+    void actualizarMount(string path, string nombre, mbr master);
+
     void reporteMBR(string path, string id);
 
     string reporteEBR(string path, mbr master);
+
+    void createDir(string path);
+
+    bool existeNombre(string path, string nombre_s);
 
 };
 

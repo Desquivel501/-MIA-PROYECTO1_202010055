@@ -1,0 +1,7 @@
+digraph G {
+fontname="Helvetica,Arial,sans-serif"
+node [fontname="Helvetica,Arial,sans-serif"]
+rankdir=TB;
+ node [shape=record];
+label="Disco3.dsk"
+a[label = " mbr| Primaria \n6.67 %| {Extendida | {Logica \n6.67 %| Logica \n5.33 %| Libre \n28.00 %}}| Primaria \n4.00 %| Libre \n49.33 %"]}

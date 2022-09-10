@@ -114,7 +114,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         analizar_comandos(path);
     }
 
-    if(comando == "mkdisk"){
+    else if(comando == "mkdisk"){
         // cout<<"Comando -> mkdisk"<<endl;
 
         int size = -1;
@@ -154,7 +154,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         cmd.crearDisco(size,unit,fit,path);
     }
 
-    if(comando == "fdisk"){
+    else if(comando == "fdisk"){
         // cout<<"Comando -> "<<comando<<endl;
 
         int size = 0;
@@ -219,7 +219,13 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
 
         else if (del && !add){
-            cout<<"[MIA]@Proyecto1:~$ Delete"<<endl;
+            if(name == ""){
+                cout<<"[MIA]@Proyecto1:~$ No se ha especificado el nombre de particion a borrar"<<endl;
+            }else{
+                cmd.borrarParticion(path, name);
+            }
+
+
         }
 
         else if (!del && add){
@@ -238,7 +244,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
 
     }
 
-    if(comando == "rmdisk"){
+    else if(comando == "rmdisk"){
         // cout<<"Comando -> "<<comando<<endl;
 
         string path;
@@ -256,7 +262,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         cmd.borrarDisco(path);
     }
 
-    if(comando == "mount"){
+    else if(comando == "mount"){
         string path;
         string part;
         string nombre_d;
@@ -285,7 +291,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         cmd.mount(path, part, nombre_d);
     }
 
-    if(comando == "unmount"){
+    else if(comando == "unmount"){
         string id;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -300,7 +306,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         cmd.unmount(id);
     }
 
-    if(comando == "rep"){
+    else if(comando == "rep"){
         string path, id, name;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -329,10 +335,14 @@ void Analizador::identificar(string comando, vector<string> parametros){
             cmd.reporteMBR(path, id);
         }
 
+        if(name == "disk"){
+            cmd.repDisco(path, id);
+        }
+
 
     }
 
-    if(comando == "mkfs"){
+    else if(comando == "mkfs"){
         cout<<"Comando -> "<<comando<<endl;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -358,7 +368,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
     }
 
-    if(comando == "login"){
+    else if(comando == "login"){
         cout<<"Comando -> "<<comando<<endl;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -384,25 +394,11 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
     }
 
-    if(comando == "logout"){
+    else if(comando == "logout"){
         cout<<"Comando -> "<<comando<<endl;
     }
 
-    if(comando == "mkgrp"){
-        cout<<"Comando -> "<<comando<<endl;
-
-        for(int i = 0; i < parametros.size(); i++){
-            param = parametros.at(i);;
-
-            if(param.find("-name->") == 0){
-                param = replace_txt(param, "-name->", "");
-                param = replace_txt(param, "\"", "");
-                cout<<"Nombre: "<<param<<endl;
-            }
-        }
-    }
-
-    if(comando == "rmgrp"){
+    else if(comando == "mkgrp"){
         cout<<"Comando -> "<<comando<<endl;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -416,7 +412,21 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
     }
 
-    if(comando == "mkusr"){
+    else if(comando == "rmgrp"){
+        cout<<"Comando -> "<<comando<<endl;
+
+        for(int i = 0; i < parametros.size(); i++){
+            param = parametros.at(i);;
+
+            if(param.find("-name->") == 0){
+                param = replace_txt(param, "-name->", "");
+                param = replace_txt(param, "\"", "");
+                cout<<"Nombre: "<<param<<endl;
+            }
+        }
+    }
+
+    else if(comando == "mkusr"){
         cout<<"Comando -> "<<comando<<endl;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -442,7 +452,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
     }
 
-    if(comando == "rmusr"){
+    else if(comando == "rmusr"){
         cout<<"Comando -> "<<comando<<endl;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -456,7 +466,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
     }
 
-    if(comando == "chmod"){
+    else if(comando == "chmod"){
         cout<<"Comando -> "<<comando<<endl;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -480,7 +490,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
     }
 
-    if(comando == "mkfile"){
+    else if(comando == "mkfile"){
         cout<<"Comando -> "<<comando<<endl;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -510,7 +520,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
     }
 
-    if(comando == "cat"){
+    else if(comando == "cat"){
         cout<<"Comando -> "<<comando<<endl;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -533,7 +543,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
     }
 
-    if(comando == "remove"){
+    else if(comando == "remove"){
         cout<<"Comando -> "<<comando<<endl;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -547,7 +557,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
     }
 
-    if(comando == "edit"){
+    else if(comando == "edit"){
         cout<<"Comando -> "<<comando<<endl;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -567,7 +577,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
     }
 
-    if(comando == "rename"){
+    else if(comando == "rename"){
         cout<<"Comando -> "<<comando<<endl;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -587,7 +597,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
     }
 
-    if(comando == "mkdir"){
+    else if(comando == "mkdir"){
         cout<<"Comando -> "<<comando<<endl;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -606,7 +616,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
     }
 
-    if(comando == "copy"){
+    else if(comando == "copy"){
         cout<<"Comando -> "<<comando<<endl;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -626,7 +636,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
     }
 
-    if(comando == "move"){
+    else if(comando == "move"){
         cout<<"Comando -> "<<comando<<endl;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -646,7 +656,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
     }
 
-    if(comando == "chown"){
+    else if(comando == "chown"){
         cout<<"Comando -> "<<comando<<endl;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -670,7 +680,7 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
     }
 
-    if(comando == "chgrp"){
+    else if(comando == "chgrp"){
         cout<<"Comando -> "<<comando<<endl;
 
         for(int i = 0; i < parametros.size(); i++){
@@ -690,9 +700,18 @@ void Analizador::identificar(string comando, vector<string> parametros){
         }
     }
 
-    if(comando == "pause"){
-        cout<<"Comando -> "<<comando<<endl;
+    else if(comando == "pause"){
+        cout<<"Pause"<<endl;
         cin.ignore();
+    }
+
+    else if(comando == "mounted"){
+        cmd.getMount();
+    }
+
+    else{
+        cout<<"[MIA]@Proyecto1:~$ Comando '"<<comando<<"' no esta definido"<<endl;
+        return;
     }
 
 }

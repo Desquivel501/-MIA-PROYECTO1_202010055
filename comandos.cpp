@@ -44,6 +44,8 @@ void Comandos::crearDisco(int size, string unit, string fit, string path){
         bloque[i] = '\0';
     }
 
+    createDir(path);
+
     FILE *archivo = fopen(path.c_str(), "wb+");
 
     int limite = 0;
@@ -64,14 +66,22 @@ void Comandos::crearDisco(int size, string unit, string fit, string path){
     fseek(archivo, 0, SEEK_SET);
     fwrite(&master, sizeof(mbr), 1, archivo);
     fclose(archivo);
+
+
+    int index = path.find_last_of('/');
+    string nombre_d = path.substr(index + 1);
+    cout<<"[MIA]@Proyecto1:~$ Disco '" + nombre_d + "' creado exitosamente "<<endl;
     
 }
 
 void Comandos::borrarDisco(string path){
     if( remove(path.c_str())!= 0 )
-        cout<<"[MIA]@Proyecto1:~$ Error al eliminar archivo: "<<path<<endl;
-    else
-        cout<<"[MIA]@Proyecto1:~$ Archivo eliminado exitosamente "<<endl;
+        cout<<"[MIA]@Proyecto1:~$ Error al eliminar el disco: "<<path<<endl;
+    else{
+        int index = path.find_last_of('/');
+        string nombre_d = path.substr(index + 1);
+        cout<<"[MIA]@Proyecto1:~$ Disco '" + nombre_d + "' eliminado exitosamente "<<endl;
+    }
 }
 
 
@@ -110,13 +120,18 @@ void Comandos::crearParticion(int size, string unit, string fit, string path, st
         tipo_char = 'L';
     }
 
-
     FILE *archivo = fopen(path.c_str(), "rb+");
     mbr master;
     if(archivo == NULL){
         cout<<"[MIA]@Proyecto1:~$ No se ha podido abrir el archivo: "<<path<<endl;
         return;
     }else{
+
+        if(existeNombre(path, name)){
+            fclose(archivo);
+            cout<<"[MIA]@Proyecto1:~$ Ya existe una particion con ese nombre"<<endl;
+            return;
+        }
         
         rewind(archivo);
         fread(&master,sizeof(mbr),1,archivo);
@@ -131,17 +146,30 @@ void Comandos::crearParticion(int size, string unit, string fit, string path, st
 
             if(existeExtendida(master)){
                 crearParticionLogica(path, master, size_file,fit_char,name);
+                mostrar(master, path);
+            }else{
+                cout<<"[MIA]@Proyecto1:~$ No existe ninguna particion extendida"<<endl;
             }
             return;
         }
 
+        if (tipo_char == 'E'){
+            if(existeExtendida(master)){
+                cout<<"[MIA]@Proyecto1:~$ Solo puede existir una particion extendida"<<endl;
+                return;
+            }
+            
+        }
+
+        
+
         vector<used_space> usado;
         usado.push_back({0, sizeof(mbr)});
 
-        if(master.part_1.part_start != -1) usado.push_back({master.part_1.part_start, master.part_1.part_s});
-        if(master.part_2.part_start != -1) usado.push_back({master.part_2.part_start, master.part_2.part_s});
-        if(master.part_3.part_start != -1) usado.push_back({master.part_3.part_start, master.part_3.part_s});
-        if(master.part_4.part_start != -1) usado.push_back({master.part_4.part_start, master.part_4.part_s});
+        if(master.part_1.status != '0') usado.push_back({master.part_1.part_start, master.part_1.part_s, master.part_1});
+        if(master.part_2.status != '0') usado.push_back({master.part_2.part_start, master.part_2.part_s, master.part_2});
+        if(master.part_3.status != '0') usado.push_back({master.part_3.part_start, master.part_3.part_s, master.part_3});
+        if(master.part_4.status != '0') usado.push_back({master.part_4.part_start, master.part_4.part_s, master.part_4});
 
         sort(usado.begin(), usado.end());
 
@@ -197,10 +225,10 @@ void Comandos::crearParticion(int size, string unit, string fit, string path, st
 
         mbr nuevo_master = master; 
 
-        if(nuevo_master.part_1.part_start == -1) nuevo_master.part_1 = nueva;
-        else if(nuevo_master.part_2.part_start == -1) nuevo_master.part_2 = nueva;
-        else if(nuevo_master.part_3.part_start == -1) nuevo_master.part_3 = nueva;
-        else if(nuevo_master.part_4.part_start == -1) nuevo_master.part_4 = nueva;
+        if(nuevo_master.part_1.status == '0') nuevo_master.part_1 = nueva;
+        else if(nuevo_master.part_2.status == '0') nuevo_master.part_2 = nueva;
+        else if(nuevo_master.part_3.status == '0') nuevo_master.part_3 = nueva;
+        else if(nuevo_master.part_4.status == '0') nuevo_master.part_4 = nueva;
         else{
             cout<<"[MIA]@Proyecto1:~$ No se puede crear otra particion"<<endl;
             return;
@@ -219,6 +247,8 @@ void Comandos::crearParticion(int size, string unit, string fit, string path, st
             fwrite(&inicio, sizeof(ebr), 1, archivo);
         }
         fclose(archivo);
+        mostrar(master, path);
+        cout<<"[MIA]@Proyecto1:~$ Particion '" + name + "' creada exitosamente "<<endl;
     }
 
 }
@@ -306,6 +336,7 @@ void Comandos::crearParticionLogica(string path, mbr master, int size, char fit,
 
         fseek(archivo, inicio_libre, SEEK_SET);
         fwrite(&nuevo_ebr, sizeof(ebr), 1, archivo);
+        cout<<"[MIA]@Proyecto1:~$ Particion '" + name + "' creada exitosamente "<<endl;
 
     }else{
         cout<<"[MIA]@Proyecto1:~$ No se pudo crear la particion"<<endl;
@@ -356,6 +387,7 @@ void Comandos::mostrar(mbr master, string path){
         cout<<"Error al leer el archivo"<<endl;
     }
 }
+
 
 void Comandos::mostrarExtendida(partition extendida, string path){
     FILE *archivo = fopen(path.c_str(), "rb+");
@@ -412,6 +444,7 @@ void Comandos::mount(string path, string nombre_s, string nombre_d){
             montado mount = {id, master.part_1, master, path};
             mounted.push_back(mount);
             fclose(archivo);
+            cout<<"[MIA]@Proyecto1:~$ Particion '" + nombre_s + "' montada con id: " <<id<<endl;
             return;
         }
         part_name = master.part_2.part_name;
@@ -421,6 +454,7 @@ void Comandos::mount(string path, string nombre_s, string nombre_d){
             montado mount = {id, master.part_2, master, path};
             mounted.push_back(mount);
             fclose(archivo);
+            cout<<"[MIA]@Proyecto1:~$ Particion '" + nombre_s + "' montada con id: " <<id<<endl;
             return;
         }
         part_name = master.part_3.part_name;
@@ -430,6 +464,7 @@ void Comandos::mount(string path, string nombre_s, string nombre_d){
             montado mount = {id, master.part_3, master, path};
             mounted.push_back(mount);
             fclose(archivo);
+            cout<<"[MIA]@Proyecto1:~$ Particion '" + nombre_s + "' montada con id: " <<id<<endl;
             return;
         }
         part_name = master.part_4.part_name;
@@ -439,6 +474,7 @@ void Comandos::mount(string path, string nombre_s, string nombre_d){
             montado mount = {id, master.part_4, master, path};
             mounted.push_back(mount);
             fclose(archivo);
+            cout<<"[MIA]@Proyecto1:~$ Particion '" + nombre_s + "' montada con id: " <<id<<endl;
             return;
         }
 
@@ -458,10 +494,12 @@ void Comandos::mount(string path, string nombre_s, string nombre_d){
                 montado mount = {id, partL, master, path};
                 mounted.push_back(mount);
                 fclose(archivo);
+                cout<<"[MIA]@Proyecto1:~$ Particion '" + nombre_s + "' montada con id: " <<id<<endl;
                 return;
             }
 
             while(ebr_it.part_next != -1){
+                fseek(archivo, ebr_it.part_next, SEEK_SET);
                 fread(&ebr_it, sizeof(ebr), 1, archivo);
 
                 if(ebr_it.part_status == '1'){
@@ -474,6 +512,7 @@ void Comandos::mount(string path, string nombre_s, string nombre_d){
                         montado mount = {id, partL, master, path};
                         mounted.push_back(mount);
                         fclose(archivo);
+                        cout<<"[MIA]@Proyecto1:~$ Particion '" + nombre_s + "' montada con id: " <<id<<endl;
                         return;
                     }
                 }
@@ -487,6 +526,7 @@ void Comandos::mount(string path, string nombre_s, string nombre_d){
 void Comandos::reporteMBR(string path, string id){
     for (montado m : Comandos::mounted){
         if(m.id == id){
+            createDir(path);
             ofstream dot;
             dot.open("auxiliar.dot");
             string cmd = "dot -Tjpg auxiliar.dot -o '" + path + "'";
@@ -593,14 +633,10 @@ string Comandos::reporteEBR(string path, mbr master){
     return dot;
 }
 
-
 void Comandos::repDisco(string path, string id){
     for (montado m : Comandos::mounted){
         if(m.id == id){
-            ofstream dot;
-            dot.open("auxiliar.dot");
-            string cmd = "dot -Tjpg auxiliar2.dot -o '" + path + "'";
-
+            createDir(path);
             FILE *archivo = fopen(m.path.c_str(), "rb+");
             mbr master;
             if(archivo == NULL){
@@ -617,18 +653,77 @@ void Comandos::repDisco(string path, string id){
             int size = master.size;
 
             ofstream dot;
-            dot.open("auxiliar2.dot");
-            string cmd = "dot -Tjpg auxiliar.dot -o '" + path + "'";
+            dot.open("auxiliar_disk.dot");
+            string cmd = "dot -Tjpg auxiliar_disk.dot -o '" + path + "'";
 
             dot << "digraph G {\n"; 
             dot << "fontname=\"Helvetica,Arial,sans-serif\"\n"; 
             dot << "node [fontname=\"Helvetica,Arial,sans-serif\"]\n"; 
             dot << "rankdir=TB;\n"; 
+            dot << " node [shape=record];\n"; 
             dot << "label=\"" + nombre_d + "\"\n"; 
 
             dot << "a[label = \" "; 
 
             dot << "mbr"; 
+
+            int size_disco = master.size;
+
+            vector<used_space> usado;
+            usado.push_back({0, sizeof(mbr)});
+
+            if(master.part_1.status != '0') usado.push_back({master.part_1.part_start, master.part_1.part_s, master.part_1});
+            if(master.part_2.status != '0') usado.push_back({master.part_2.part_start, master.part_2.part_s, master.part_2});
+            if(master.part_3.status != '0') usado.push_back({master.part_3.part_start, master.part_3.part_s, master.part_3});
+            if(master.part_4.status != '0') usado.push_back({master.part_4.part_start, master.part_4.part_s, master.part_4});
+
+            for(int i = 0; i < usado.size(); i++){
+                used_space inicio = usado[i];
+
+                if((i + 1) != usado.size()){
+                    used_space fin = usado[i+1];
+
+                    int ini = inicio.start + inicio.size + 1;
+                    int end = fin.start - 1;
+                    int size = end - ini;
+                    
+                    if (size > 0){
+                        
+                        float ocupado = ( static_cast<float>(size) / size_disco) * 100;
+                        std::stringstream ss;
+                        ss << std::fixed << std::setprecision(2) << ocupado;
+                        dot << "| Libre \\n" + ss.str() +" %"; 
+                    }
+
+                    if(fin.part.type == 'E'){
+                        
+                        float ocupado_ = (static_cast<float>(fin.size) / size_disco) *100;
+                        std::stringstream ss;
+                        ss << std::fixed << std::setprecision(2) << ocupado_;
+                        dot << "| {Extendida | {";
+                        dot << repDiscoEx(m.path,master,size_disco);
+                        dot << "}}"; 
+                    }else{
+                        float ocupado_ = (static_cast<float>(fin.size) / size_disco) *100;
+                        std::stringstream ss;
+                        ss << std::fixed << std::setprecision(2) << ocupado_;
+                        dot << "| Primaria \\n" + ss.str() +" %"; 
+                    }
+
+                }else{
+                    int ini = inicio.start + inicio.size+1;
+                    int end = master.size - 1;
+                    int size = end - ini;
+                    if (size > 0){
+                        float ocupado = ( static_cast<float>(size) / size_disco) * 100;
+                        std::stringstream ss;
+                        ss << std::fixed << std::setprecision(2) << ocupado;
+                        dot << "| Libre \\n" + ss.str() +" %"; 
+                    }
+                }
+
+            }
+            
 
             dot << "\"]"; 
             dot << "}\n"; 
@@ -637,4 +732,269 @@ void Comandos::repDisco(string path, string id){
             return;
         }
     }
+}
+
+string Comandos::repDiscoEx(string path, mbr master, int size_total){
+
+    string dot = "";
+
+    FILE *archivo = fopen(path.c_str(), "rb+");
+    partition partExtendida = getPartExtendida(master);
+    int inicio_part = partExtendida.part_start;
+    int fin_part = inicio_part + partExtendida.part_s - 1;
+
+    fseek(archivo, inicio_part, SEEK_SET);
+
+    ebr ebr_it;
+    fread(&ebr_it, sizeof(ebr), 1, archivo);
+
+    int inicio_libre = inicio_part;
+    int limite_libre = fin_part;
+
+    bool puedeCrear = false;
+    bool primero = true;
+
+    if(ebr_it.part_status == '0'){
+        if(ebr_it.part_next == -1){
+            float ocupado = ( static_cast<float>(partExtendida.part_s) / size_total) * 100;
+            std::stringstream ss;
+            ss << std::fixed << std::setprecision(2) << ocupado;
+            dot += "Libre \\n" + ss.str() +" %"; 
+            return dot;
+        }else{
+            float ocupado = ( static_cast<float>(ebr_it.part_s) / size_total) * 100;
+            std::stringstream ss;
+            ss << std::fixed << std::setprecision(2) << ocupado;
+            dot += "Libre \\n" + ss.str() +" %"; 
+        }
+        
+    }else{
+        float ocupado = ( static_cast<float>(ebr_it.part_s) / size_total) * 100;
+        std::stringstream ss;
+        ss << std::fixed << std::setprecision(2) << ocupado;
+        dot += "Logica \\n" + ss.str() +" %"; 
+    }
+
+
+    while(ebr_it.part_next != -1){
+
+        if(ebr_it.part_status == '1'){
+            inicio_libre = ebr_it.part_start + ebr_it.part_s;
+        }
+
+        limite_libre = ebr_it.part_next - 1;
+
+        if( (limite_libre - inicio_libre) > 0){
+            float ocupado = ( static_cast<float>(limite_libre - inicio_libre) / size_total) * 100;
+            std::stringstream ss;
+            ss << std::fixed << std::setprecision(2) << ocupado;
+            dot += "| Libre \\n" + ss.str() +" %"; 
+        }
+
+        fseek(archivo, ebr_it.part_next, SEEK_SET);
+        fread(&ebr_it, sizeof(ebr), 1, archivo);
+
+        float ocupado = ( static_cast<float>(ebr_it.part_s) / size_total) * 100;
+        std::stringstream ss;
+        ss << std::fixed << std::setprecision(2) << ocupado;
+        dot += "| Logica \\n" + ss.str() +" %"; 
+    }
+
+    if((fin_part - (ebr_it.part_start + ebr_it.part_s)) > 0){
+        float ocupado = ( static_cast<float>((fin_part - (ebr_it.part_start + ebr_it.part_s))) / size_total) * 100;
+        std::stringstream ss;
+        ss << std::fixed << std::setprecision(2) << ocupado;
+        dot += "| Libre \\n" + ss.str() +" %"; 
+    }
+
+    fclose(archivo);
+    return dot;
+}
+
+
+void Comandos::createDir(string path){
+    int index = path.find_last_of('/');
+    string nombre_dir = path.substr(0, index);
+    string cmd = "mkdir -p '" + nombre_dir +"'";
+    system(cmd.c_str());
+}
+
+
+bool Comandos::existeNombre(string path, string nombre_s){
+
+    FILE *archivo = fopen(path.c_str(), "rb+");
+    mbr master;
+
+    string num = to_string(Comandos::id_mount);
+
+    if(archivo == NULL){
+        cout<<"[MIA]@Proyecto1:~$ No se ha podido abrir el archivo: "<<path<<endl;
+        return true; 
+    }else{
+
+        rewind(archivo);
+        fread(&master,sizeof(mbr),1,archivo);
+
+        string part_name = master.part_1.part_name;
+        if(part_name == nombre_s){
+            return true;
+        }
+        part_name = master.part_2.part_name;
+        if(part_name == nombre_s){
+            return true;
+        }
+        part_name = master.part_3.part_name;
+        if(part_name == nombre_s){
+            return true;
+        }
+        part_name = master.part_4.part_name;
+        if(part_name == nombre_s){
+            return true;
+        }
+
+        if (existeExtendida(master)){
+            partition partExtendida = getPartExtendida(master);                
+            fseek(archivo, partExtendida.part_start, SEEK_SET);
+
+            ebr ebr_it;
+            fread(&ebr_it, sizeof(ebr), 1, archivo);
+                
+            part_name = ebr_it.part_name;
+            if( part_name == nombre_s){
+                return true;
+            }
+
+            while(ebr_it.part_next != -1){
+                fseek(archivo, ebr_it.part_next, SEEK_SET);
+                fread(&ebr_it, sizeof(ebr), 1, archivo);
+
+                if(ebr_it.part_status == '1'){
+                    part_name = ebr_it.part_name;
+                    if( part_name == nombre_s){
+                        return true;
+                    }
+                }
+            }
+
+        }
+    }
+    return false;
+}
+
+
+void Comandos::borrarParticion(string path, string nombre_s){
+
+    FILE *archivo = fopen(path.c_str(), "rb+");
+    mbr master;
+
+    string num = to_string(Comandos::id_mount);
+
+    if(archivo == NULL){
+        cout<<"[MIA]@Proyecto1:~$ No se ha podido abrir el archivo: "<<path<<endl;
+        return; 
+    }else{
+
+        rewind(archivo);
+        fread(&master,sizeof(mbr),1,archivo);
+
+        string part_name = master.part_1.part_name;
+        if(part_name == nombre_s && master.part_1.status != '0'){
+            master.part_1.status = '0';
+            rewind(archivo);
+            fwrite(&master, sizeof(mbr), 1, archivo);
+            cout<<"[MIA]@Proyecto1:~$ Particion '" + nombre_s + "' ha sido eliminada"<<endl;
+            actualizarMount(path,part_name,master);
+            fclose(archivo);
+            return ;
+        }
+        part_name = master.part_2.part_name;
+        if(part_name == nombre_s && master.part_2.status != '0'){
+            master.part_2.status = '0';
+            rewind(archivo);
+            fwrite(&master, sizeof(mbr), 1, archivo);
+            cout<<"[MIA]@Proyecto1:~$ Particion '" + nombre_s + "' ha sido eliminada"<<endl;
+            actualizarMount(path,part_name,master);
+            fclose(archivo);
+            return ;
+        }
+        part_name = master.part_3.part_name;
+        if(part_name == nombre_s && master.part_3.status != '0'){
+            master.part_3.status = '0';
+            rewind(archivo);
+            fwrite(&master, sizeof(mbr), 1, archivo);
+            cout<<"[MIA]@Proyecto1:~$ Particion '" + nombre_s + "' ha sido eliminada"<<endl;
+            actualizarMount(path,part_name,master);
+            fclose(archivo);
+            return ;
+        }
+        part_name = master.part_4.part_name;
+        if(part_name == nombre_s && master.part_4.status != '0'){
+            master.part_4.status = '0';
+            rewind(archivo);
+            fwrite(&master, sizeof(mbr), 1, archivo);
+            cout<<"[MIA]@Proyecto1:~$ Particion '" + nombre_s + "' ha sido eliminada"<<endl;
+            actualizarMount(path,part_name,master);
+            fclose(archivo);
+            return ;
+        }
+
+        if (existeExtendida(master)){
+            partition partExtendida = getPartExtendida(master);                
+            fseek(archivo, partExtendida.part_start, SEEK_SET);
+
+            ebr ebr_it;
+            fread(&ebr_it, sizeof(ebr), 1, archivo);
+                
+            part_name = ebr_it.part_name;
+            if( part_name == nombre_s && ebr_it.part_status != '0'){
+                ebr_it.part_status = '0';
+                fseek(archivo, partExtendida.part_start, SEEK_SET);
+                fwrite(&ebr_it, sizeof(ebr), 1, archivo);
+                cout<<"[MIA]@Proyecto1:~$ Particion '" + nombre_s + "' ha sido eliminada"<<endl;
+                actualizarMount(path,part_name,master);
+                fclose(archivo);
+                return ;
+            }
+
+            while(ebr_it.part_next != -1){
+                fseek(archivo, ebr_it.part_next, SEEK_SET);
+                fread(&ebr_it, sizeof(ebr), 1, archivo);
+                part_name = ebr_it.part_name;
+                if(ebr_it.part_status == '1' && part_name == nombre_s ){
+                    part_name = ebr_it.part_name;
+                    if( part_name == nombre_s){
+                        ebr_it.part_status = '0';
+                        fseek(archivo, ebr_it.part_next - sizeof(ebr), SEEK_SET);
+                        fwrite(&ebr_it, sizeof(ebr), 1, archivo);
+                        cout<<"[MIA]@Proyecto1:~$ Particion '" + nombre_s + "' ha sido eliminada"<<endl;
+                        actualizarMount(path,part_name,master);
+                        fclose(archivo);
+                        return ;
+                    }
+                }
+            }
+
+        }
+    }
+    fclose(archivo);
+}
+
+
+void Comandos::actualizarMount(string path, string nombre, mbr master){
+    for (montado& m : Comandos::mounted){
+        cout<< m.path << " -- " <<path <<endl;
+        if(m.path == path){
+            string part_name = m.particion.part_name;
+            if(part_name == nombre){
+                unmount(nombre);
+            }else{
+                cout<<"here"<<endl;
+                m.master = master;
+            }
+
+        }
+    }
+
+ 
+
 }

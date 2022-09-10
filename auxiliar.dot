@@ -6,9 +6,9 @@ node [shape=record];
 a[label = <<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
             <tr> <td bgcolor="#800080">  <font color="white"> <b>REPORTE MBR</b> </font> </td> <td bgcolor="#800080"></td> </tr>
             <tr> <td> <b>mbr_tamano</b> </td> <td> <b>78643200</b> </td> </tr>
-            <tr> <td bgcolor="#f2e5f2"> <b>mbr_fecha_creacion</b> </td> <td> <b>Thu Sep  8 23:33:13 2022
+            <tr> <td bgcolor="#f2e5f2"> <b>mbr_fecha_creacion</b> </td> <td> <b>Fri Sep  9 19:53:56 2022
 </b> </td> </tr>
-            <tr> <td> <b>mbr_disk_signature</b> </td> <td> <b>1696705995</b> </td> </tr>
+            <tr> <td> <b>mbr_disk_signature</b> </td> <td> <b>212800977</b> </td> </tr>
             <tr> <td bgcolor="#800080">  <font color="white"> <b>PARTICION</b> </font> </td> <td bgcolor="#800080"></td> </tr>
             <tr> <td> <b>part_status</b> </td> <td> <b>1</b> </td> </tr>
             <tr> <td bgcolor="#f2e5f2"> <b>part_type</b> </td> <td bgcolor="#f2e5f2"> <b>P</b> </td> </tr>

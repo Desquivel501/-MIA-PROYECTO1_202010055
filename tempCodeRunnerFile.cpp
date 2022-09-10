@@ -1,1 +1,2 @@
-exec -path->/home/desquivel/Desktop/script.mia
+
+        
