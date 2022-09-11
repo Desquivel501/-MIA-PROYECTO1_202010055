@@ -523,6 +523,7 @@ void Comandos::mount(string path, string nombre_s, string nombre_d){
     }
 }
 
+
 void Comandos::reporteMBR(string path, string id){
     for (montado m : Comandos::mounted){
         if(m.id == id){
@@ -594,6 +595,7 @@ void Comandos::reporteMBR(string path, string id){
             return;
         }
     }
+    cout<<"[MIA]@Proyecto1:~$ La particion no esta montada "<<endl;
 }
 
 string Comandos::reporteEBR(string path, mbr master){
@@ -732,6 +734,7 @@ void Comandos::repDisco(string path, string id){
             return;
         }
     }
+    cout<<"[MIA]@Proyecto1:~$ La particion no esta montada "<<endl;
 }
 
 string Comandos::repDiscoEx(string path, mbr master, int size_total){
@@ -982,13 +985,11 @@ void Comandos::borrarParticion(string path, string nombre_s){
 
 void Comandos::actualizarMount(string path, string nombre, mbr master){
     for (montado& m : Comandos::mounted){
-        cout<< m.path << " -- " <<path <<endl;
         if(m.path == path){
             string part_name = m.particion.part_name;
             if(part_name == nombre){
                 unmount(nombre);
             }else{
-                cout<<"here"<<endl;
                 m.master = master;
             }
 

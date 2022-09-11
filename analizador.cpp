@@ -106,7 +106,6 @@ void Analizador::identificar(string comando, vector<string> parametros){
             if(param.find("-path->") == 0){
                 param = replace_txt(param, "-path->", "");
                 param = replace_txt(param, "\"", "");
-                cout<<"Ruta: "<<param<<endl;
                 path = param;
             }
 

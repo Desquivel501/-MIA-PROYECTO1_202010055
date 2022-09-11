@@ -5,45 +5,52 @@ rankdir=TB;
 node [shape=record];
 a[label = <<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
             <tr> <td bgcolor="#800080">  <font color="white"> <b>REPORTE MBR</b> </font> </td> <td bgcolor="#800080"></td> </tr>
-            <tr> <td> <b>mbr_tamano</b> </td> <td> <b>78643200</b> </td> </tr>
-            <tr> <td bgcolor="#f2e5f2"> <b>mbr_fecha_creacion</b> </td> <td> <b>Fri Sep  9 19:53:56 2022
+            <tr> <td> <b>mbr_tamano</b> </td> <td> <b>52428800</b> </td> </tr>
+            <tr> <td bgcolor="#f2e5f2"> <b>mbr_fecha_creacion</b> </td> <td> <b>Sat Sep 10 23:48:27 2022
 </b> </td> </tr>
-            <tr> <td> <b>mbr_disk_signature</b> </td> <td> <b>212800977</b> </td> </tr>
-            <tr> <td bgcolor="#800080">  <font color="white"> <b>PARTICION</b> </font> </td> <td bgcolor="#800080"></td> </tr>
-            <tr> <td> <b>part_status</b> </td> <td> <b>1</b> </td> </tr>
-            <tr> <td bgcolor="#f2e5f2"> <b>part_type</b> </td> <td bgcolor="#f2e5f2"> <b>P</b> </td> </tr>
-            <tr> <td> <b>part_fit</b> </td> <td> <b>W</b> </td> </tr>
-            <tr> <td bgcolor="#f2e5f2"> <b>part_start</b> </td> <td bgcolor="#f2e5f2"> <b>137</b> </td> </tr>
-            <tr> <td> <b>part_size</b> </td> <td> <b>5242880</b> </td> </tr>
-            <tr> <td bgcolor="#f2e5f2"> <b>part_name</b> </td> <td bgcolor="#f2e5f2"> <b>Particion1</b> </td> </tr>
+            <tr> <td> <b>mbr_disk_signature</b> </td> <td> <b>1858732007</b> </td> </tr>
             <tr> <td bgcolor="#800080">  <font color="white"> <b>PARTICION</b> </font> </td> <td bgcolor="#800080"></td> </tr>
             <tr> <td> <b>part_status</b> </td> <td> <b>1</b> </td> </tr>
             <tr> <td bgcolor="#f2e5f2"> <b>part_type</b> </td> <td bgcolor="#f2e5f2"> <b>E</b> </td> </tr>
             <tr> <td> <b>part_fit</b> </td> <td> <b>W</b> </td> </tr>
-            <tr> <td bgcolor="#f2e5f2"> <b>part_start</b> </td> <td bgcolor="#f2e5f2"> <b>5243018</b> </td> </tr>
-            <tr> <td> <b>part_size</b> </td> <td> <b>31457280</b> </td> </tr>
-            <tr> <td bgcolor="#f2e5f2"> <b>part_name</b> </td> <td bgcolor="#f2e5f2"> <b>Particion2</b> </td> </tr>
+            <tr> <td bgcolor="#f2e5f2"> <b>part_start</b> </td> <td bgcolor="#f2e5f2"> <b>137</b> </td> </tr>
+            <tr> <td> <b>part_size</b> </td> <td> <b>10485760</b> </td> </tr>
+            <tr> <td bgcolor="#f2e5f2"> <b>part_name</b> </td> <td bgcolor="#f2e5f2"> <b>Part1</b> </td> </tr>
             <tr> <td bgcolor="#ffa500">  <font color="white"> <b>PARTICION LOGICA</b> </font> </td> <td bgcolor="#ffa500"></td> </tr>
             <tr> <td> <b>part_status</b> </td> <td> <b>1</b> </td> </tr>
-            <tr> <td bgcolor="#fff6e5"> <b>part_next</b> </td> <td bgcolor="#fff6e5"> <b>10485898</b> </td> </tr>
+            <tr> <td bgcolor="#fff6e5"> <b>part_next</b> </td> <td bgcolor="#fff6e5"> <b>1048713</b> </td> </tr>
             <tr> <td> <b>part_fit</b> </td> <td> <b>W</b> </td> </tr>
-            <tr> <td bgcolor="#fff6e5"> <b>part_start</b> </td> <td bgcolor="#fff6e5"> <b>5243050</b> </td> </tr>
-            <tr> <td> <b>part_size</b> </td> <td> <b>5242848</b> </td> </tr>
-            <tr> <td bgcolor="#fff6e5"> <b>part_name</b> </td> <td bgcolor="#fff6e5"> <b>Particion3</b> </td> </tr>
+            <tr> <td bgcolor="#fff6e5"> <b>part_start</b> </td> <td bgcolor="#fff6e5"> <b>169</b> </td> </tr>
+            <tr> <td> <b>part_size</b> </td> <td> <b>1048544</b> </td> </tr>
+            <tr> <td bgcolor="#fff6e5"> <b>part_name</b> </td> <td bgcolor="#fff6e5"> <b>Part2</b> </td> </tr>
+            <tr> <td bgcolor="#ffa500">  <font color="white"> <b>PARTICION LOGICA</b> </font> </td> <td bgcolor="#ffa500"></td> </tr>
+            <tr> <td> <b>part_status</b> </td> <td> <b>1</b> </td> </tr>
+            <tr> <td bgcolor="#fff6e5"> <b>part_next</b> </td> <td bgcolor="#fff6e5"> <b>2097289</b> </td> </tr>
+            <tr> <td> <b>part_fit</b> </td> <td> <b>W</b> </td> </tr>
+            <tr> <td bgcolor="#fff6e5"> <b>part_start</b> </td> <td bgcolor="#fff6e5"> <b>1048745</b> </td> </tr>
+            <tr> <td> <b>part_size</b> </td> <td> <b>1048544</b> </td> </tr>
+            <tr> <td bgcolor="#fff6e5"> <b>part_name</b> </td> <td bgcolor="#fff6e5"> <b>Part3</b> </td> </tr>
             <tr> <td bgcolor="#ffa500">  <font color="white"> <b>PARTICION LOGICA</b> </font> </td> <td bgcolor="#ffa500"></td> </tr>
             <tr> <td> <b>part_status</b> </td> <td> <b>1</b> </td> </tr>
             <tr> <td bgcolor="#fff6e5"> <b>part_next</b> </td> <td bgcolor="#fff6e5"> <b>-1</b> </td> </tr>
             <tr> <td> <b>part_fit</b> </td> <td> <b>W</b> </td> </tr>
-            <tr> <td bgcolor="#fff6e5"> <b>part_start</b> </td> <td bgcolor="#fff6e5"> <b>10485930</b> </td> </tr>
-            <tr> <td> <b>part_size</b> </td> <td> <b>4194272</b> </td> </tr>
-            <tr> <td bgcolor="#fff6e5"> <b>part_name</b> </td> <td bgcolor="#fff6e5"> <b>Particion4</b> </td> </tr>
+            <tr> <td bgcolor="#fff6e5"> <b>part_start</b> </td> <td bgcolor="#fff6e5"> <b>2097321</b> </td> </tr>
+            <tr> <td> <b>part_size</b> </td> <td> <b>1048544</b> </td> </tr>
+            <tr> <td bgcolor="#fff6e5"> <b>part_name</b> </td> <td bgcolor="#fff6e5"> <b>Part4</b> </td> </tr>
             <tr> <td bgcolor="#800080">  <font color="white"> <b>PARTICION</b> </font> </td> <td bgcolor="#800080"></td> </tr>
-            <tr> <td> <b>part_status</b> </td> <td> <b>1</b> </td> </tr>
+            <tr> <td> <b>part_status</b> </td> <td> <b>0</b> </td> </tr>
             <tr> <td bgcolor="#f2e5f2"> <b>part_type</b> </td> <td bgcolor="#f2e5f2"> <b>P</b> </td> </tr>
-            <tr> <td> <b>part_fit</b> </td> <td> <b>W</b> </td> </tr>
-            <tr> <td bgcolor="#f2e5f2"> <b>part_start</b> </td> <td bgcolor="#f2e5f2"> <b>36700299</b> </td> </tr>
-            <tr> <td> <b>part_size</b> </td> <td> <b>3145728</b> </td> </tr>
-            <tr> <td bgcolor="#f2e5f2"> <b>part_name</b> </td> <td bgcolor="#f2e5f2"> <b>Particion5</b> </td> </tr>
+            <tr> <td> <b>part_fit</b> </td> <td> <b>F</b> </td> </tr>
+            <tr> <td bgcolor="#f2e5f2"> <b>part_start</b> </td> <td bgcolor="#f2e5f2"> <b>-1</b> </td> </tr>
+            <tr> <td> <b>part_size</b> </td> <td> <b>-1</b> </td> </tr>
+            <tr> <td bgcolor="#f2e5f2"> <b>part_name</b> </td> <td bgcolor="#f2e5f2"> <b>none</b> </td> </tr>
+            <tr> <td bgcolor="#800080">  <font color="white"> <b>PARTICION</b> </font> </td> <td bgcolor="#800080"></td> </tr>
+            <tr> <td> <b>part_status</b> </td> <td> <b>0</b> </td> </tr>
+            <tr> <td bgcolor="#f2e5f2"> <b>part_type</b> </td> <td bgcolor="#f2e5f2"> <b>P</b> </td> </tr>
+            <tr> <td> <b>part_fit</b> </td> <td> <b>F</b> </td> </tr>
+            <tr> <td bgcolor="#f2e5f2"> <b>part_start</b> </td> <td bgcolor="#f2e5f2"> <b>-1</b> </td> </tr>
+            <tr> <td> <b>part_size</b> </td> <td> <b>-1</b> </td> </tr>
+            <tr> <td bgcolor="#f2e5f2"> <b>part_name</b> </td> <td bgcolor="#f2e5f2"> <b>none</b> </td> </tr>
             <tr> <td bgcolor="#800080">  <font color="white"> <b>PARTICION</b> </font> </td> <td bgcolor="#800080"></td> </tr>
             <tr> <td> <b>part_status</b> </td> <td> <b>0</b> </td> </tr>
             <tr> <td bgcolor="#f2e5f2"> <b>part_type</b> </td> <td bgcolor="#f2e5f2"> <b>P</b> </td> </tr>
